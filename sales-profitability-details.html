@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales Performance & Profitability Dashboard</title>
+  <style>
+    :root {
+      --color-1: #424874;
+      --color-2: #A6B1E1;
+      --color-3: #F4EEFF;
+      --color-4: #FDF6FD;
+      --color-5: #D9ACF5;
+      --color-6: #FFCEFE;
+      --color-7: #DCD6F7;
+      --color-8: #BBB9E9;
+      --color-9: #292524;
+      --color-10: #64748B;
+      --shadow: 0 18px 45px rgba(66, 72, 116, 0.12);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--color-4) 0%, #fff 100%);
+      color: var(--color-9);
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { width: 100%; display: block; border-radius: 18px; object-fit: cover; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .page { padding-bottom: 80px; }
+
+    .hero {
+      padding: 48px 0 70px;
+      background: linear-gradient(135deg, var(--color-1) 0%, var(--color-8) 100%);
+      color: white;
+    }
+    .top-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .nav-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.16); backdrop-filter: blur(10px);
+      padding: 10px 14px; border-radius: 999px; font-size: 0.92rem; font-weight: 600;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center; }
+    .hero h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); margin-bottom: 12px; }
+    .hero p { color: rgba(255,255,255,0.9); max-width: 740px; }
+    .hero-card {
+      background: rgba(255,255,255,0.95); color: var(--color-9);
+      padding: 20px; border-radius: 22px; box-shadow: var(--shadow);
+    }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .meta-pill {
+      background: var(--color-3); color: var(--color-1); padding: 8px 12px; border-radius: 999px;
+      font-size: 0.9rem; font-weight: 600;
+    }
+    .tool-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .tool-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--color-4); border: 1px solid rgba(66,72,116,0.1);
+      padding: 8px 12px; border-radius: 999px; font-size: 0.9rem; font-weight: 600;
+      color: var(--color-1);
+    }
+    .tool-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 6px;
+      background: rgba(66,72,116,0.08); color: var(--color-1);
+      font-size: 0.95rem;
+    }
+
+    .section {
+      margin-top: 34px; padding: 28px; background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow); border: 1px solid rgba(66,72,116,0.06);
+    }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .section-head h2 { font-size: 1.25rem; color: var(--color-1); }
+    .section-head span { color: var(--color-10); font-size: 0.92rem; }
+    .content-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 22px; align-items: start; }
+    .content-grid.reverse { grid-template-columns: 0.95fr 1.05fr; }
+    .text-block p, .text-block li { color: var(--color-10); }
+    .text-block ul { padding-left: 18px; margin-top: 8px; }
+    .text-block li { margin-bottom: 8px; }
+    .media-card { background: var(--color-4); padding: 12px; border-radius: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.8); }
+    .media-card img { aspect-ratio: 16 / 10; cursor: zoom-in; }
+    .question-grid, .insight-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .card {
+      background: linear-gradient(135deg, var(--color-3), white);
+      padding: 16px; border-radius: 18px; border: 1px solid rgba(66,72,116,0.08);
+      box-shadow: 0 12px 24px rgba(66,72,116,0.07);
+      color: var(--color-9);
+    }
+    .card h3 { color: var(--color-9); }
+    .card p { color: var(--color-9); }
+    .card-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--color-5); color: var(--color-1); font-size: 1.1rem; margin-bottom: 10px; }
+    .check-list { display: grid; gap: 10px; }
+    .check-item {
+      display: flex; align-items: center; gap: 10px; background: var(--color-4);
+      padding: 10px 12px; border-radius: 12px; color: var(--color-1); font-weight: 600;
+    }
+    .check-item::before { content: "✓"; color: var(--color-1); font-weight: 700; }
+    .recommendation-card {
+      background: linear-gradient(135deg, var(--color-6), var(--color-3));
+      padding: 18px; border-radius: 18px; border-left: 4px solid var(--color-1);
+      box-shadow: 0 12px 24px rgba(66,72,116,0.08);
+    }
+    .recommendation-card h3 { margin-bottom: 8px; color: var(--color-1); }
+    .nav-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .nav-link { display: inline-flex; align-items: center; gap: 8px; background: var(--color-3); color: var(--color-1); padding: 10px 14px; border-radius: 999px; font-weight: 600; }
+
+    .lightbox-overlay {
+      position: fixed; inset: 0; background: rgba(9, 14, 29, 0.8); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 999;
+    }
+    .lightbox-overlay.active { display: flex; }
+    .lightbox-box {
+      max-width: 92vw; max-height: 90vh; background: white; padding: 14px; border-radius: 20px; box-shadow: var(--shadow);
+    }
+    .lightbox-box img { max-height: 82vh; width: auto; max-width: 92vw; object-fit: contain; cursor: zoom-out; border-radius: 14px; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .content-grid, .content-grid.reverse, .question-grid, .insight-grid { grid-template-columns: 1fr; }
+      .section { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="wrap">
+      <div class="top-nav">
+        <a class="nav-chip" href="index%20(2).html">← Back to Portfolio</a>
+        <div class="nav-chip">Previous Project · Next Project</div>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Sales Performance &amp; Profitability Dashboard</h1>
+          <p>This project brings together sales, profitability, and customer insights into one interactive Power BI experience. It helps stakeholders quickly understand which products, regions, and customer segments are driving meaningful growth and margin.</p>
+          <div class="meta-row">
+            <span class="meta-pill">Date Completed: March 2026</span>
+            <span class="meta-pill">Portfolio Project</span>
+          </div>
+          <div class="tool-row">
+            <span class="tool-pill"><span class="tool-icon">BI</span>Power BI</span>
+            <span class="tool-pill"><span class="tool-icon">DB</span>SQL</span>
+            <span class="tool-pill"><span class="tool-icon">XL</span>Excel</span>
+            <span class="tool-pill"><span class="tool-icon">DX</span>DAX</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="archive11_extract/p1.png" alt="Sales dashboard cover image" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="wrap">
+      <section class="section">
+        <div class="section-head">
+          <h2>Project Overview</h2>
+          <span>Business intelligence dashboard</span>
+        </div>
+        <div class="content-grid">
+          <div class="text-block">
+            <p>The dashboard was built to turn a large sales dataset into a clear view of how revenue and profitability move across categories, regions, and customer groups. It combines performance tracking with visual storytelling so business users can quickly identify which areas deserve more focus.</p>
+          </div>
+          <div class="media-card">
+            <img src="archive11_extract/p2.png" alt="Sales dashboard overview screenshot" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Business Problem</h2>
+          <span>Why the work mattered</span>
+        </div>
+        <div class="content-grid reverse">
+          <div class="media-card">
+            <img src="archive11_extract/p3.png" alt="Business problem dashboard screenshot" loading="lazy" />
+          </div>
+          <div class="text-block">
+            <p>The business needed a more reliable way to understand which sales efforts were actually contributing to profit. Static reports were too slow and lacked a direct view of how products, locations, and customer segments were performing in relation to margin.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Business Questions</h2>
+          <span>Questions the dashboard answers</span>
+        </div>
+        <div class="question-grid">
+          <div class="card">
+            <div class="card-icon">📈</div>
+            <h3>Which regions drive the most revenue?</h3>
+          </div>
+          <div class="card">
+            <div class="card-icon">💰</div>
+            <h3>Which product categories are most profitable?</h3>
+          </div>
+          <div class="card">
+            <div class="card-icon">👥</div>
+            <h3>Which customer segments should receive priority?</h3>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔍</div>
+            <h3>What trends are affecting margin over time?</h3>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Data Preparation</h2>
+          <span>Cleaning and shaping the data</span>
+        </div>
+        <div class="content-grid">
+          <div class="check-list">
+            <div class="check-item">Removed duplicate records</div>
+            <div class="check-item">Checked missing values</div>
+            <div class="check-item">Standardized data formats</div>
+            <div class="check-item">Verified data types</div>
+            <div class="check-item">Created calculated fields for profit and growth</div>
+          </div>
+          <div class="media-card">
+            <img src="archive11_extract/p4.png" alt="Data preparation workflow screenshot" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Key Insights</h2>
+          <span>What the analysis revealed</span>
+        </div>
+        <div class="insight-grid">
+          <div class="card">
+            <h3>High-performing regions</h3>
+            <p>A small set of regions accounted for a large share of revenue and profitability, showing where the strongest demand was concentrated.</p>
+            <div class="media-card" style="margin-top:12px;">
+              <img src="archive11_extract/p5.png" alt="Key insight chart screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="card">
+            <h3>Margin pressure in select segments</h3>
+            <p>Several high-volume segments showed lower profit margins, indicating that growth alone was not a reliable signal of business value.</p>
+            <div class="media-card" style="margin-top:12px;">
+              <img src="archive11_extract/p2.png" alt="Profitability insight screenshot" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Recommendations</h2>
+          <span>Next steps for decision makers</span>
+        </div>
+        <div class="question-grid">
+          <div class="recommendation-card">
+            <h3>Prioritize high-margin regions</h3>
+            <p>Increase focus on the regions producing the strongest profit contribution while monitoring lower-margin areas more closely.</p>
+          </div>
+          <div class="recommendation-card">
+            <h3>Rebalance product mix</h3>
+            <p>Shift promotional effort toward products that show stronger profitability and better long-term value.</p>
+          </div>
+          <div class="recommendation-card">
+            <h3>Refine customer targeting</h3>
+            <p>Use customer segment insights to align sales and support actions with the segments that create the highest value.</p>
+          </div>
+          <div class="recommendation-card">
+            <h3>Track margin trends regularly</h3>
+            <p>Use the dashboard as an ongoing review tool so profitability issues are visible before they become major risks.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="nav-row">
+        <a class="nav-link" href="index%20(2).html">← Back to Portfolio</a>
+        <a class="nav-link" href="index%20(2).html#projects">Previous Project</a>
+        <a class="nav-link" href="index%20(2).html#projects">Next Project →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxOverlay" aria-hidden="true">
+    <div class="lightbox-box">
+      <img id="lightboxImage" src="" alt="Expanded project image" />
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('img[loading="lazy"]').forEach((img) => {
+      img.addEventListener('click', () => {
+        document.getElementById('lightboxImage').src = img.src;
+        document.getElementById('lightboxOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    document.getElementById('lightboxOverlay').addEventListener('click', () => {
+      document.getElementById('lightboxOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  </script>
+</body>
+</html>
